@@ -1,0 +1,464 @@
+*====================================================================*
+* TeamFortress v2.8                                     qwserver.txt *
+*====================================================================*
+Setting up a QuakeWorld TeamFortress server
+=----------------------------------------=
+The new QW allows us to do more powerful server settings in TF.
+The new settings _always_ override any options that were set
+in the code before compilation.
+
+An advantage of this method, apart from the fact it makes it
+easier for admins to operate their server, is that it allows players
+to learn more about the server before they connect.
+
+=--------------=
+N.B QuakeWorld 2.0 supports the "localinfo", which works pretty much
+    identically to the serverinfo, and has 32k memory for it. 
+    So, we advise that you move all the TF keys to localinfo...
+    you can stop using abbreviations now too, since there's heaps
+    of room now.
+    Note that at the moment, the "n" key used in map cycling is
+    still in the serverinfo.
+
+=--------------=
+A Message Of the Day can be set using the the localinfo keys "motd1" and
+"motd2". When players connect, the two strings will be centerprinted to
+them. 
+
+e.g.
+    localinfo motd1 "Welcome to GamesOnline TF"
+    localinfo motd2 "http://www.gamesonline.net.au/"
+
+Connecting players would see:
+              Welcome to GamesOnline TF
+            http://www.gamesonline.net.au/
+
+=--------------=
+Various toggleable options can be set on the server, as follows:
+
+		sbr = sbar_res
+		sbs = sbar_size
+		ec = exec_class
+
+    "localinfo autoteam on"
+    "localinfo autoteam off"
+    "localinfo a on"			    // Abbreviations
+    "localinfo a off"
+        Turn ON/OFF the Autoteaming.
+        If it's ON, players who join will automatically be assigned to the 
+        team with the lowest number of players in it.
+
+    "localinfo teamfrags on"
+    "localinfo teamfrags off"
+    "localinfo t on"			    // Abbreviations
+    "localinfo t off"
+        Turn ON/OFF the TeamFrags.
+        If it's ON, player's frags will always be equal to their team's score.
+
+    "localinfo fullteamscore on"
+    "localinfo fts on"			    // Abbreviation
+        Turn ON/OFF the Full Team Score.
+        If it's ON, player's frags will always be equal to their team's score.
+
+    "localinfo spyinvis on"
+    "localinfo spyinvis off"
+    "localinfo s on"		  	    // Abbreviations
+    "localinfo s off"
+        Turn ON/OFF the Spy's invisibility.
+        If it's ON, Spies become invisible when they go undercover.
+        If it's OFF, Spies change their skin/color when they go undercover.
+
+    "localinfo grapple on"
+    "localinfo grapple off"
+    "localinfo g on"		    	// Abbreviations
+    "localinfo g off"
+        Turn ON/OFF the Grappling Hook.
+        If it's OFF, players will never have access to it. If it's ON,
+        players will have access to it on maps that don't forbid it.
+
+	"localinfo respawn_delay 10"	// 10 Seconds
+	"localinfo respawn_delay 5"	    // 5 Seconds
+	"localinfo rd 10"				// Abbreviations
+	"localinfo rd 5"				
+		Turn ON a Respawn Delay.
+		You can set the delay to any numerical value you like. High
+		Respawn Delays aren't much fun.
+
+    "localinfo flag_emu on"
+    "localinfo fe on"          // Abbreviation
+        Turn ON Flag Emulation. 
+        When this is on, TF will replace any TF goals using the 
+        old Quake keys for flags with the new TF Flag. Good to turn
+        on for the old TF maps, like 2fort4.
+
+    "localinfo use_standard on"
+    "localinfo ws on"          // Abbreviation
+        Turn ON Use War Standard.
+        When this is on, TF will replace any TF Flags with the 
+        new TF War Standard.
+
+    "localinfo birthday on"
+    "localinfo bd on"          // Abbreviation
+        Turn ON Birthday Mode.
+        This was a hidden mode of TF coded in for TF's first birthday.
+        It changes a lot of the death messages, sounds, models, etc.
+
+    "localinfo old_grens on"
+    "localinfo og on"          // Abbreviation
+        Makes scouts/spies/medics use the old Concussion/Flash/Hallu
+        grenades instead of the newer, uncheatable TF 2.8 versions.
+
+=--------------=
+The "team" variable for each team can be set as follows:
+	
+	"localinfo team1 blue"
+	"localinfo team2 red"
+	"localinfo team3 yell"
+	"localinfo team4 gren"
+	"localinfo t1 blue"     	// Abbreviations
+	"localinfo t2 red"
+	"localinfo t3 yell"
+	"localinfo t4 gren"
+
+		These set each of the 4 Team's "team" variables. 
+		e.g. any player in Team 1 will have a "team" variable of "blue".
+
+		N.B. Make sure the variable is not more than 4 characters.
+
+Please note that you only need to do these if you want them to be
+something other than "blue", "red", "yell", "gren". They revert to these
+defaults automatically if the server keys are not set.
+
+=---------------=
+Class Changing
+    By default, once players have chosen a class, they can't change again.
+    The server can allow players to change classes during a game by setting
+    the "deathmatch" variable to 3.
+
+=--------------=
+The teamplay options can be set using the teamplay variable,
+which is also a bitfield, as follows:
+
+	Bit 1:	    Teamplay On.
+	Bit 2:	    Team-members take 1/2 damage from direct fire.
+	Bit 4:	    Team-members take No damage from direct fire.
+	Bit 8:	    Team-members take 1/2 damage from area-affect weaponry.
+	Bit 16:	    Team-members take No damage from area-affect weaponry.
+	Bit 32:     Team Equalisation : give advantage to team with less members.
+	Bit 64:     Team Equalisation : give advantage to team with lower score.
+	Bit 128:	Team-members only lose 1/2 armor from direct fire.
+	Bit 256:	Team-members lose no armor from direct fire.
+	Bit 512:	Team-members only lose 1/2 armor from area-affect weaponry.
+	Bit 1024:	Team-members lose no armor from area-affect weaponry.
+    Bit 2048:   Team-members take 1/2 mirror damage from direct fire.
+    Bit 4096:   Team-members take full mirror damage from direct fire.
+    Bit 8192:   Team-members take 1/2 mirror damage from area-affect weaponry.
+    Bit 16384:  Team-members take full mirror damage from area-affect weaponry.
+
+Area Effect Weaponry
+	Anything which explodes, hurting people in an area around it.
+	e.g. Rocket blasts, grenades.
+
+Direct Fire
+	Anything which does damage directly to one person.
+	e.g. Shotguns, rifles, assault cannon, and nails.
+
+N.B. QSpy sorts servers based upon the teamplay variable. For QSpy to be
+     able to sort your server, make sure you put "?TF" after the teamplay
+	 variable.
+
+For example, if you wanted to have teammates take 1/2 damage from 
+area effects, No damage from direct fire, and full team equalisation,
+you'd set "teamplay 109?TF" (1 + 4 + 8 + 32 + 64 = 109).
+
+The Team Equilisation gives an advantage to a team by altering the
+amount of damage they do and take.  It is designed to be subtle, but
+it can still help the losing team fight back. Not good for tournaments
+though.
+
+=--------------=
+If you're running a server which allows players to injure their 
+teammates, you should probably setup the AutoKicker.
+The AutoKicker kicks any player in the game that kills a set
+number of teammates within a set time limit.
+You can set both these variables as follows:
+    "localinfo autokick_time 60"   // 1 minute Time period
+    "localinfo akt 60"			    // Abbreviation
+        The time period for the AutoKicker, in seconds.
+        Players will be kicked if they kill the set amount of 
+        teammates within this time.
+
+    "localinfo autokick_kills 5"   // 5 teamkills b4 being kicked
+    "localinfo akk 5"			    // Abbreviation
+        The number of teammates a player has to kill within the
+        autokick time period to trigger the autokick.
+
+So, if you set the AutoKicker time period to 60, and the
+number of teamkills to 5, any player who kills 5 or more
+teammates within 1 minute would be kicked.
+
+=--------------=
+You can restrict the number of players in each team that can play
+the same class.
+    "localinfo cr_scout 3"     // No more than 3 scouts on a team
+    "localinfo cr_sniper 3"    
+    "localinfo cr_soldier -1"  // No soldiers on any team
+    "localinfo cr_demoman 3"   
+    "localinfo cr_medic 3"     
+    "localinfo cr_hwguy 3"     
+    "localinfo cr_pyro 3"    
+    "localinfo cr_spy 0"       // Redundant. (infinite spies allowed)
+    "localinfo cr_engineer 3" 
+    "localinfo cr_random 1"    
+
+    "localinfo cr_sc 3"        // Abbreviations
+    "localinfo cr_sn 3"    
+    "localinfo cr_so -1"  
+    "localinfo cr_de 3"   
+    "localinfo cr_me 3"     
+    "localinfo cr_hw 3"     
+    "localinfo cr_py 3"    
+    "localinfo cr_sp 0"    
+    "localinfo cr_en 3" 
+    "localinfo cr_ra 1"    
+
+Setting any class's limit to -1 prevents anyone from playing that class.
+Setting any class's limit to 0 is the same as not specifying that class's
+restriction at all... no prevention on the number of players playing that class.
+
+N.B. RandomPC is considered a separate class. If the Soldier limit of 2,
+     a team might still have more than 2 soldiers at one time, if a player
+     somewhere is a RandomPC, as a soldier.
+     So, if you want to rigidly enforce the class limits, for clan battles or
+     whatever, prevent anyone from playing RandomPC.
+     e.g.
+        "localinfo cr_random -1"
+        "localinfo cr_ra -1"   // Abbreviation
+
+=--------------=
+Server administrator's can give other trusted players "admin" passwords,
+which gives them the power to perform admin commands without rcon.
+
+Admin Passwords
+    To enable player-admins, you must specify an Admin password
+    in the server's localinfo, as follows:
+        localinfo adminpwd <password>
+        localinfo apw <password>        // Abbreviation
+    e.g.
+        localinfo adminpwd tfrocks
+        localinfo apw tfrocks           // Abbreviation
+    Once this has been done, you simply give this password to
+    the people you want to allow admin access to.
+    
+    The admins must put their password into a client setinfo
+    key called "adminpwd". E.g. each admin would do this
+    command in the console:
+        setinfo adminpwd tfrocks
+    This must be done BEFORE joining the TF server.
+    As soon as the player joins, TF will recognise the admin
+    password, clear it to prevent others seeing it, and then
+    mark that player as being an admin.
+
+Admin Commands
+    Any admin can perform these commands.
+    "countplayers"
+        Simply displays the total number of players in the game,
+        and how many are in each team.
+
+    "kick"
+        Cycles through the players in the game, asking you if you
+        want to kick each of them. If you do, type "yes".
+        If not, use the "kick" command again to cycle to the 
+        next player.
+
+    "ceasefire"
+        Toggles cease-fire on/off. While cease-fire is on, players
+        cannot move or shoot.
+
+=--------------=
+Finally, the maps the server can cycle through are now defined in cfg files.
+
+
+NOTE:
+    The TF v2.8 package includes an excellent server configuration tool 
+    which sets up all the map cycling for you. Unzip the servcfg.zip file
+    that was included in the v2.8 installation. This will place several
+    files into the fortress directory, and some documentation files into
+    the fortress/doc directory.
+    Read the voteent.txt file in the fortress/doc directory for 
+    information on how to use voteent.
+
+If you don't want to use voteent, read on.
+Create a directory under the quake\fortress directory called "qwmcycle".
+In this directory you can put cfg files that the patch will use.
+
+The directory, qwmcycle, can be overridden by setting the "cycledir"
+or "md" localinfo keys to an alternative directory.
+e.g
+    "localinfo cycledir server1" 
+    "localinfo cd server1"         // Abbreviation
+    Both make the server take it's map cfg files from the 
+    fortress\server1 directory.
+
+Each cfg file should be called "mapX.cfg", where X is the map number in
+the map loop. 
+E.g. If you wanted to cycle between three maps (2fort_32, storm1, well6), you 
+	 would make 3 cfg files as follows:
+		map1.cfg	which contains the following line:
+						map 2fort_32
+		map2.cfg	which contains the following line:
+						map storm1
+		map3.cfg	which contains the following line:
+						map well6
+	
+NOTE! At the end of the list, you _MUST_ create another cfg file,
+which consists of one line which sets serverinfo n 0.
+
+E.g. in the above example, you would also need this:
+		map4.cfg	which contains the following line:
+						serverinfo n 0
+
+And last, you must put a map command in your server.cfg file which
+changes map to the first map in the list, and a serverinfo n 1 to prevent
+the first map playing twice
+E.g. in the above example, at the end of your server.cfg you would put:
+		map 2fort_32
+		serverinfo n 1
+
+There is no limit to the number of maps you can cycle between. You can also
+use the cfg file to change any server details. Lets say that in the above
+example, you wanted to only allow 16 players onto storm1, and 32 onto the rest.
+You would change the following files:
+		map2.cfg	would become:
+						maxclients 16
+						map storm1
+		map3.cfg	would become:
+						maxclients 32
+						map well6
+
+If you want to make a server rerun the same level over and over again,
+you will still have to make a map1.cfg that contains a map command, and
+a map2.cfg that sets serverinfo n 0.
+	
+N.B. Make sure all the maps in the list are spelt correctly and that they
+     are in your server's map directory. If they're not, the server will 
+     crash when it tries to enter the map.
+
+N.B. The "n" serverinfo key stores the current map number in the list. If
+	 you want to jump around the levels, you can just set the key to 
+	 (desired level number - 1).
+	 e.g. if you wanted to jump to map 3 in the list, enter this:
+				serverinfo n 2
+	 	  and then end the level.
+
+=--------------=
+Miscellaneous Details
+
+Servers can now set a localinfo key "exec_map_cfgs" to "on", which 
+makes the server automatically exec a cfg file everytime a new map
+starts. The cfg file matches that of the mapname.
+E.g. if the server changes to 2fort4, it'll automatically exec
+     qwmcycle\2fort4.cfg
+     if the server has the "cycledir" localinfo key set, then
+     the cfg file inside the cycle directory will be used.
+
+This works well in conjunction with Jim Kaufman's Vote maps,
+allowing server admins to still configure the server individually
+for each map.
+
+=--------------=
+Advanced Map Cycling
+
+TF 2.8 allows you to cycle maps based upon the number of players in the game.
+It works within the old map cycling. You tell TF a minimum and maximum number
+of players needed for a map, and then a cfg file to execute if the current 
+number of players is within that range.
+e.g. Say in the above example, you wanted storm1 to run only if there's
+     no more than 6 players in the game.
+     You would replace map2.cfg with a map2.cfg looking like this:
+        localinfo minp 0        <-- Minimum players of 0
+        localinfo maxp 6        <-- Maximum players of 6
+        localinfo nmap storm    <-- The .cfg file to execute if the players fit
+
+     Then, you would put a "storm.cfg" file in the map cycling directory
+     which contained these lines:
+        maxclients 16
+        map storm1
+
+If the number of players is NOT within the range, the map cycling simply 
+moves onto the next mapX.cfg file. So, it might be a good idea to always have 
+at least one mapX.cfg file which doesn't have any player requirements... in 
+case the number of players in the game doesn't fit the requirements for any 
+map.
+
+You can move in and out of the simpler method.
+Here's a full example of a map cycling setup:
+
+    map1.cfg
+                exec standard.cfg
+                map 2fort4
+
+    map2.cfg    
+                exec standard.cfg
+                map rock1
+
+    map3.cfg    
+                exec standard.cfg
+                localinfo minp 12
+                localinfo maxp 32
+                localinfo nmap well6
+
+    map4.cfg
+                exec standard.cfg
+                localinfo minp 0
+                localinfo maxp 15
+                localinfo nmap hunted
+                
+    map5.cfg    
+                exec standard.cfg
+                timelimit 5
+                map accel
+
+    map6.cfg    
+                exec standard.cfg
+                localinfo minp 16
+                localinfo maxp 32
+                localinfo nmap canalzon
+
+    map7.cfg
+                serverinfo n 0
+
+
+    well6.cfg
+                exec standard.cfg
+                map well6
+
+    hunted.cfg
+                exec standard.cfg
+                fraglimit 120
+                localinfo autoteam "off"
+                localinfo cr_de "-1"
+                localinfo cr_sp "-1"
+                localinfo cr_en "-1"
+                localinfo cr_ra "-1"
+                localinfo respawn_delay "7"
+                map hunted
+
+    canalzon.cfg
+                exec standard.cfg
+                map canalzon
+
+    standard.cfg
+                <base setup for all maps>
+
+In this example, the maps would cycle through 2fort4, rock1, then well6 if 
+there was at least 12 players, hunted if there was <= 15 players, then
+5 minutes of accel (fun for all the family! ;), and finally canalzone if there
+was at least 16 players. If the number of players doesn't fit for any of the
+maps, it simply moves onto the next one.
+
+=---------------------------------------------------------------------------=
+TEAMFORTRESS v2.8                         20/5/98
+TeamFortress Software Pty. Ltd.
+Company WWW: http://www.teamfortress.com/
+TF Web Site: http://www.planetquake.com/teamfortress

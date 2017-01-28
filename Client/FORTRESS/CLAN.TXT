@@ -1,0 +1,242 @@
+*====================================================================*
+* TeamFortress v2.8                                         clan.txt *
+*====================================================================*
+Setting up a QW TeamFortress server for a Clan Battle
+=----------------------------------------------------=
+Running a QW Clan Battle with TF should be a lot easier now.
+Make sure you've read the qwserver.txt file before you read this.
+
+As usual, there's abbreviations for all the localinfo keys,
+even though QW 2.0 has made them pretty redundant.
+
+=--------------=
+Turning on Clan Mode
+
+    To access all the Clan Battle settings, you need to put TF into
+    Clan Mode, using the "clan" localinfo key.
+        "localinfo clan on"
+        "localinfo c on"			// Abbreviation
+
+=--------------=
+Clan Names
+    You can replace the "blue", "red", etc team names that TF enforces,
+    so you can have your Clan's name for the team.
+    Read the qwserver.txt file for details on how to do it.
+
+Clan Skins
+    You can allow individual teams to use different skins.
+    This is useful in Clan Battles if each clan has it's own
+    set of skins for the TF classes. It's not a good idea to
+    play with Clan skins unless each Clan has recognisable
+    skins for all classes.
+    The change the skins used, set the following localinfo
+    keys. Any keys that aren't set will simply use the base
+    TF skins.
+
+        Team 1 Skins              Team 2 Skins
+            sk_t1_scout               sk_t2_scout
+            sk_t1_sniper              sk_t2_sniper
+            sk_t1_soldier             sk_t2_soldier
+            sk_t1_demoman             sk_t2_demoman
+            sk_t1_medic               sk_t2_medic
+            sk_t1_hwguy               sk_t2_hwguy
+            sk_t1_pyro                sk_t2_pyro
+            sk_t1_spy                 sk_t2_spy
+            sk_t1_engineer            sk_t2_engineer
+
+        Team 3 Skins              Team 4 Skins
+            sk_t3_scout               sk_t4_scout
+            sk_t3_sniper              sk_t4_sniper
+            sk_t3_soldier             sk_t4_soldier
+            sk_t3_demoman             sk_t4_demoman
+            sk_t3_medic               sk_t4_medic
+            sk_t3_hwguy               sk_t4_hwguy
+            sk_t3_pyro                sk_t4_pyro
+            sk_t3_spy                 sk_t4_spy
+            sk_t3_engineer            sk_t4_engineer
+
+    E.g. If one clan had a new scout skin called "our_scout", and 
+         they were playing as Team 1, you'd set the svr's key:
+             "localinfo sk_t1_scout our_scout"
+
+=--------------=
+PreMatch Time
+
+    A PreMatch time period can be specified by setting the "prematch"
+    localinfo key to the time period, in minutes.
+        "localinfo prematch 10"    // 10 Minute PreMatch time
+        "localinfo pm 10"			// Abbreviation
+        
+    During the PreMatch time, players can run around and shoot each
+    other, but they can't pick up anything, drop anything, use special
+    class abilities, etc. 
+    They can access the usual TF information commands, such as showclasses,
+    inv, flaginfo, etc.
+    They can also change class, even if the deathmatch variable is not set
+    to 3. So, if you want to allow class changing during the PreMatch time,
+    but not during the Match, then don't set the deathmatch variable to 3.
+    Players get regular messages telling them how long it is until the match
+    begins. Once it begins, all players are killed once to ensure all the
+    teams restart in their bases.
+    N.B. If you have a timelimit for your match, make sure you add the 
+         prematch time to it. For example, if you wanted a 30 minute game,
+         with a 5 minute PreMatch time, you'd set the "prematch" key to 5,
+         and "timelimit" to 35.
+         If your timelimit is set to less that the PreMatch time TF will 
+         set the timelimit to be the current timelimit plus the Prematch 
+         time.
+         e.g. If your prematch time is 5 minutes, and your timelimit is 2,
+              it'd set the timelimit to 7 minutes.
+
+Cease Fire Time
+    A Ceasefire time period can be specified by setting the 
+    "ceasefire_time localinfo key to the time period, in minutes.
+        "localinfo ceasefire_time 10"    // 10 Minute CeaseFire time
+        "localinfo cft 10"			      // Abbreviation
+
+    During this time period, players will not be able to move
+    or shoot.         
+    N.B. The same time rules for the PreMatch time period apply to
+         the Ceasefire time period. 
+         But, the Ceasefire time period must be less than or
+         equal to the PreMatch time.
+
+
+=--------------=
+Class Restrictions
+    Check out the qwserver.txt file for info on how to restrict the number
+    of players on any team using a particular class.
+
+=--------------=
+Player Substitutions
+    Players that are disconnected during a Clan battle can rejoin and 
+    continue playing. They will automatically have their team, class,
+    and frags restored when they rejoin.
+    Players can also sub in for a disconnected player.
+    This is done as follows:
+      When a player joins a Clan game, they're given a Battle ID.
+      The player will be told "Your Battle ID is X", when X is a number.
+      When a player is disconnected, TF keeps a note of their Battle ID.
+      When a player rejoins, TF checks to see if the player has a Battle ID.
+      If they have, it checks to see if it matches someone who's disconnected,
+      and if it does match, it restores the player.
+      If they haven't got a Battle ID, or their ID doesn't match any 
+      disconnected players, then it either doesn't allow them in the game,
+      or it lets them start as normal, depending on the state of the 
+      "locked_game" localinfo variable (see below).
+
+      Now, when a player initially joins the game, their Battle ID is 
+      stored inside the _player's_ "tf_id" setinfo key, so if they're
+      disconnected, they can reconnect just fine.
+      But, if that player loses connection completely, and can't rejoin,
+      another player can substitute for them. To do this, you need to 
+      set your "tf_id" setinfo key to the Battle ID of the disconnected
+      player.
+      Since the player who dropped off may have lost net access, we allow
+      anyone on a team to find the Battle ID's of anyone on their team
+      using the "showids" command.
+
+    "showids"
+      This command will show you a list of all your team mates and their
+      Battle IDs. It will also show you a list of Battle IDs of players
+      on your team who've disconnected... but it _won't_ show you their
+      names.
+      The reason for this is because we can't. Quake releases the string
+      containing the player's name when they disconnect, and there's nothing
+      we can do about it.
+      You should get by without any trouble tho... there's usually only one
+      or two player's who are disconnected at any time.
+
+      Once you've got the Battle ID of a disconnected player who you want
+      to sub in for, the player has to set his/her "tf_id" setinfo key
+      to that value.
+      E.g. If the Battle ID of the disconnected player is 56, then the
+           substitute would type this command at his/her console:
+                setinfo tf_id 56
+      Once set, the substitute can join the game, and he/she'll take over
+      for the disconnected player.
+
+    Note that even if a disconnected player doesn't rejoin, and no-one
+    subs in for them, their score will still be kept for the final scores.
+
+=--------------=
+Game Locking
+    A server can be locked to prevent anyone joining the game after the
+    PreMatch time is over, using the following:
+    
+    	"localinfo locked_game on"
+    	"localinfo lg on"              // Abbreviation
+
+    Players who are disconnected will still be able to rejoin, as will
+    substitutes for disconnected players.
+
+=--------------=
+ScreenShots
+    Any player in a clan battle who sets his/her infokey "take_sshot"
+    to "on" will automatically have a screenshot of the end game scores
+    taken for them.
+
+        "setinfo take_sshot on"
+
+    This will automatically write the screenshot for you when the game ends.
+
+=--------------=
+The Scoring System
+    The scoring system has been enhanced a fair bit to make sure that the
+    final scores shown are accurate. There's a few little details you
+    should be aware of.
+
+    Unaccounted Frags
+        If a player disconnects, and never returns, his/her frags are not
+        lost. They will be included in the final score, and you'll also
+        be shown the number of unaccounted frags each team had.
+
+    Score Tweaking
+        When the game ends, the scores of each player are changed. 
+        After this is done, the "Team" scores shown by the QW client
+        at the top of the screen will _always_ be a perfectly accurate
+        display of the Total Score for each Team.
+        The way the scores are changed depends on the scoring method
+        being used.
+
+        - Normal Scoring
+            In normal scoring, the only score tweaking done is the
+            distribution of unaccounted frags. If team 1 has 20 
+            unaccounted frags at the end of the game, they're 
+            distributed as evenly as possible between all the members
+            of Team 1.
+
+        - TeamFrags and FullTeamScore
+            In these two modes, all the members of the same team has
+            identical frags. 
+            E.g. During the game, if Team 1 has a TeamScore of 23, 
+                 all players in Team 1 will have 23 frags.
+
+            When the game ends, all the members of each Team have their
+            frags tweaked so that the total of the Team's member's frags
+            adds upto their TeamScore.
+            E.g. If, at the end of the game, Team 1 had a TeamScore of
+                 55, then all the members of Team 1 would have their frags
+                 altered so that their total adds upto 55.
+
+        Score Tweaking can be turned off by setting the following 
+        localinfo key:
+            localinfo "dont_tweak_frags" "on"
+            localinfo "dtf" "on"               // Abbreviation
+        Personally, I advise you definately don't turn off frag tweaking...
+        if you do, the final Team Score shown by the QW Client won't 
+        be accurate.
+
+    Team Details
+        Each Team's details are also dumped to the console for anyone
+        who wants to see them. E.g. for Team 1 you might see this:
+		    =------= TEAM1 RESULTS =------=
+            8 players.
+            123 frags, 13 unaccounted for.
+            40 team score.
+
+=---------------------------------------------------------------------------=
+TEAMFORTRESS v2.8                           20/5/98
+TeamFortress Software Pty. Ltd.
+Company WWW: http://www.teamfortress.com/
+TF Web Site: http://www.planetquake.com/teamfortress
